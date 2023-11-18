@@ -1,15 +1,17 @@
+drop table if exists movieActor;
+drop table if exists actor;
 drop table if exists movie;
 
 create table movie
 (
-    id          varchar(255) not null,
+    movieId     varchar(255) not null,
     title       varchar(255) not null,
     year        year,
     description varchar(10000),
-    primary key (id)
+    primary key (movieId)
 );
 
-insert into movie (id, title, year, description)
+insert into movie (movieId, title, year, description)
 values ('tt0133093', 'The Matrix', 1999,
         'When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.'),
        ('tt0266697', 'Kill Bill: Vol. 1', 2003,
@@ -51,18 +53,16 @@ values ('tt0133093', 'The Matrix', 1999,
        ('tt0172811', 'Moj ata, socialistični kulak', 1987,
         'Year 1945. The second World War is over and the soldiers from the disbanded army are returning home. Yet there is still no sign of Joze Malek. His wife Mimika and their children Tincek and olga know only that he had deserted the German army and gone over to the Soviet Red Army.');
 
-drop table if exists actor;
-
 create table actor
 (
-    id        varchar(255) not null,
+    actorId   varchar(255) not null,
     firstName varchar(255) not null,
     lastName  varchar(255) not null,
     bornDate  date,
-    primary key (id)
+    primary key (actorId)
 );
 
-insert into actor (id, firstName, lastName, bornDate)
+insert into actor (actorId, firstName, lastName, bornDate)
 values ('nm0000206', 'Keanu', 'Reeves', '1964-09-02'),
        ('nm0000401', 'Laurence', 'Fishburne', '1961-07-30'),
        ('nm0005251', 'Carrie-Anne', 'Moss', '1967-08-21'),
@@ -86,3 +86,42 @@ values ('nm0000206', 'Keanu', 'Reeves', '1964-09-02'),
        ('nm0413168', 'Hugh', 'Jackman', '1968-10-12'),
        ('nm0000164', 'Anthony', 'Hopkins', '1937-12-31'),
        ('nm0000149', 'Jodie', 'Foster', '1962-11-19');
+
+create table movieActor
+(
+    movieActorId int          not null auto_increment, -- optional, could be useful though
+    movieId      varchar(255) not null,
+    actorId      varchar(255) not null,
+    primary key (movieActorId),                        -- could be a combination of movieId and actorId
+    foreign key (movieId) references movie (movieId) on delete cascade on update cascade,
+    foreign key (actorId) references actor (actorId) on delete cascade on update cascade
+);
+
+insert into movieActor (movieId, actorId)
+values ('tt0133093', 'nm0000206'),
+       ('tt0133093', 'nm0000401'),
+       ('tt0133093', 'nm0005251'),
+       ('tt0266697', 'nm0000235'),
+       ('tt0073486', 'nm0000197'),
+       ('tt0241527', 'nm0705356'),
+       ('tt0241527', 'nm0914612'),
+       ('tt0068646', 'nm0000008'),
+       ('tt0068646', 'nm0000199'),
+       ('tt0111161', 'nm0000151'),
+       ('tt0825232', 'nm0000151'),
+       ('tt0109686', 'nm0000120'),
+       ('tt1659337', 'nm0914612'),
+       ('tt0468569', 'nm0000288'),
+       ('tt0468569', 'nm0005132'),
+       ('tt0110912', 'nm0000237'),
+       ('tt0120737', 'nm0000704'),
+       ('tt0137523', 'nm0000093'),
+       ('tt0137523', 'nm0001570'),
+       ('tt1375666', 'nm0000138'),
+       ('tt0816692', 'nm0000190'),
+       ('tt0103064', 'nm0000216'),
+       ('tt0120586', 'nm0001570'),
+       ('tt0482571', 'nm0413168'),
+       ('tt0482571', 'nm0000288'),
+       ('tt0102926', 'nm0000164'),
+       ('tt0102926', 'nm0000149');
