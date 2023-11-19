@@ -1,0 +1,31 @@
+version: '3'
+services:
+  moviesbackend:
+    image: aljazfrancic/moviesbackend:v1
+    container_name: moviesbackend
+    ports:
+      - '8080:8080'
+    depends_on:
+      - movies
+    restart: always
+    networks:
+      - my-network
+  movies:
+    image: mysql
+    container_name: movies
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'moviesDatabase'
+    ports:
+      - '3306:3306'
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my-network
+volumes:
+  mysql_data:
+
+networks:
+  my-network:
+    driver: bridge
