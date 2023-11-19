@@ -1,1 +1,10 @@
-docker run -p 3306:3306 --name movies -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=moviesDatabase -d mysql
+docker run -p 3306:3306 --name moviescont -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=moviesDatabase -d mysql
+
+clean
+package
+
+docker build -f src/main/docker/Dockerfile.jvm -t aljazfrancic/moviesbackend:v1 .
+
+docker-compose up
+
+docker push aljazfrancic/moviesbackend:v1
