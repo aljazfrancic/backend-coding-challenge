@@ -1,5 +1,6 @@
 package org.src;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -12,6 +13,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/actors")
 public class ActorResource {
+    private static final long pageSize = 5;
 
     @GET
     public List<Actor> list() {
@@ -22,6 +24,12 @@ public class ActorResource {
     @Path("/{id}")
     public Actor get(Long id) {
         return Actor.findById(id);
+    }
+
+    @GET
+    @Path("/page/{page}")
+    public List<PanacheEntityBase> listPage(int page) {
+        return Actor.streamAll().skip(page * pageSize).limit(pageSize).toList();
     }
 
     @POST
@@ -58,5 +66,4 @@ public class ActorResource {
         }
         entity.delete();
     }
-
 }
