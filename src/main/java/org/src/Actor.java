@@ -1,6 +1,6 @@
 package org.src;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
@@ -18,6 +18,6 @@ public class Actor extends PanacheEntityBase {
     public String lastName;
     public Date bornDate;
     @ManyToMany(mappedBy = "actors")
-    @JsonBackReference //avoid recursion in JSON
+    @JsonIgnoreProperties("actors") //avoid recursion in JSON
     public List<Movie> movies = new ArrayList<>();
 }

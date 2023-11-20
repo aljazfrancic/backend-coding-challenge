@@ -1,6 +1,6 @@
 package org.src;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
@@ -17,7 +17,7 @@ public class Movie extends PanacheEntityBase {
     public String description;
     @ManyToMany(cascade = {CascadeType.ALL}) //TODO CASCADE...
     @JoinTable(name = "MovieActor", joinColumns = {@JoinColumn(name = "movieId")}, inverseJoinColumns = {@JoinColumn(name = "actorId")})
-    @JsonManagedReference //avoid recursion in JSON
+    @JsonIgnoreProperties("movies") //avoid recursion in JSON
     public List<Actor> actors = new ArrayList<>();
 
     public static Movie findByName(String query) {
