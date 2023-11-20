@@ -44,7 +44,6 @@ public class MovieResource {
         entity.title = movie.title;
         entity.year = movie.year;
         entity.description = movie.description;
-        // TODO MAP OTHER
 
         return entity;
     }

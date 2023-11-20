@@ -44,7 +44,6 @@ public class ActorResource {
         entity.firstName = actor.firstName;
         entity.lastName = actor.lastName;
         entity.bornDate = actor.bornDate;
-        // TODO MAP OTHER
 
         return entity;
     }
