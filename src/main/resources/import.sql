@@ -94,3 +94,9 @@ values (0133093, 0000206),
        (0482571, 0000288),
        (0102926, 0000164),
        (0102926, 0000149);
+
+-- mock values, not real pictures, obviously
+insert into Picture(movie_id, picture)
+values (68646, 1),
+       (68646, 2),
+       (68646, 3);

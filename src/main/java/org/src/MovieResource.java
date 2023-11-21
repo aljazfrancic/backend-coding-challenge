@@ -29,7 +29,6 @@ public class MovieResource {
     @GET
     @Path("/page/{page}")
     public List<PanacheEntityBase> listPage(int page) {
-
         return Movie.streamAll().skip(page * pageSize).limit(pageSize).toList();
     }
 
