@@ -1,10 +1,11 @@
 package org.src.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 
 import java.sql.Date;
@@ -21,6 +22,6 @@ public class Actor extends PanacheEntityBase {
     public String lastName;
     public Date bornDate;
     @ManyToMany(mappedBy = "actors", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties("movies")
+    @JsonIdentityReference(alwaysAsId = true)
     public List<Movie> movies = new ArrayList<>();
 }
