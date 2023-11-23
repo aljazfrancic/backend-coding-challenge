@@ -1,57 +1,58 @@
-package org.src;
+package org.src.resources;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.src.entities.Movie;
 
 import java.net.URI;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("/actors")
-public class ActorResource {
+@Path("/movies")
+public class MovieResource {
     private static final long pageSize = 5;
 
     @GET
-    public List<Actor> list() {
-        return Actor.listAll();
+    public List<Movie> list() {
+        return Movie.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public Actor get(Long id) {
-        return Actor.findById(id);
+    public Movie get(Long id) {
+        return Movie.findById(id);
     }
 
     @GET
     @Path("/page/{page}")
     public List<PanacheEntityBase> listPage(int page) {
-        return Actor.streamAll().skip(page * pageSize).limit(pageSize).toList();
+        return Movie.streamAll().skip(page * pageSize).limit(pageSize).toList();
     }
 
     @POST
     @Transactional
-    public Response create(Actor actor) {
-        actor.persist();
-        return Response.created(URI.create("/actors/" + actor.id)).build();
+    public Response create(Movie movie) {
+        movie.persist();
+        return Response.created(URI.create("/movies/" + movie.id)).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Actor update(Long id, Actor actor) {
-        Actor entity = Actor.findById(id);
+    public Movie update(Long id, Movie movie) {
+        Movie entity = Movie.findById(id);
         if (entity == null) {
             throw new NotFoundException();
         }
 
-        entity.id = actor.id;
-        entity.firstName = actor.firstName;
-        entity.lastName = actor.lastName;
-        entity.bornDate = actor.bornDate;
+        entity.id = movie.id;
+        entity.title = movie.title;
+        entity.year = movie.year;
+        entity.description = movie.description;
 
         return entity;
     }
@@ -60,10 +61,16 @@ public class ActorResource {
     @Path("/{id}")
     @Transactional
     public void delete(Long id) {
-        Actor entity = Actor.findById(id);
+        Movie entity = Movie.findById(id);
         if (entity == null) {
             throw new NotFoundException();
         }
         entity.delete();
+    }
+
+    @GET
+    @Path("/search/{query}") //TODO TEST!
+    public Movie search(String query) {
+        return Movie.findByName(query);
     }
 }

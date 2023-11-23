@@ -1,4 +1,4 @@
-package org.src;
+package org.src.resources;
 
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.jboss.resteasy.reactive.PartType;
 import org.jboss.resteasy.reactive.RestForm;
+import org.src.entities.Movie;
+import org.src.entities.Picture;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

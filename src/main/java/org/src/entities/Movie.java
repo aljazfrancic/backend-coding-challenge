@@ -1,4 +1,4 @@
-package org.src;
+package org.src.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
