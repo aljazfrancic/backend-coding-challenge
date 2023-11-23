@@ -52,7 +52,6 @@ public class PictureResource {
             throw new NotFoundException();
         }
 
-        entity.id = picture.id;
         entity.movie = picture.movie;
         entity.picture = picture.picture;
 
