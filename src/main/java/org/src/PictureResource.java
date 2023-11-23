@@ -8,11 +8,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.List;
 
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jboss.resteasy.reactive.PartType;
 import org.jboss.resteasy.reactive.RestForm;
 
@@ -31,16 +28,15 @@ public class PictureResource {
         return Picture.findById(id);
     } //TODO: also return actual file in separate GET request???
 
-
     @POST
     @Transactional
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response create(@RestForm @Schema(type = SchemaType.STRING, format = "binary") InputStream image, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws SQLException, IOException {
+    public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
         Picture picture = new Picture();
         picture.movie = movie;
-        picture.picture = image.readAllBytes();
+        picture.picture = file.readAllBytes();
         picture.persist();
-        image.close();
+        file.close();
         return Response.created(URI.create("/pictures/" + picture.id)).build();
     }
 

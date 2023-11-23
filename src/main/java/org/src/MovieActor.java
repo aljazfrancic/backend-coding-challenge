@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class MovieActor extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id; //this id is not really necessary, but could be useful
+    public Long id;
     public Long movieId;
     public Long actorId;
 }
