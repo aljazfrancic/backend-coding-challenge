@@ -49,7 +49,6 @@ public class MovieResource {
             throw new NotFoundException();
         }
 
-        entity.id = movie.id;
         entity.title = movie.title;
         entity.year = movie.year;
         entity.description = movie.description;

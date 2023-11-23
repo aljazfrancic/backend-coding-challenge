@@ -12,20 +12,20 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Movie extends PanacheEntityBase {
     @Id
-    public Long id; //using "Base" version of PanacheEntity because ids are custom
+    public Long id;
     public String title;
     public int year;
     @Column(columnDefinition = "TEXT") //because it's long
     public String description;
 
     //TODO CASCADE...
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "MovieActor", joinColumns = {@JoinColumn(name = "movieId")}, inverseJoinColumns = {@JoinColumn(name = "actorId")})
     @JsonIgnoreProperties("actors")
     public List<Actor> actors = new ArrayList<>();
 
     //TODO CASCADE...
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "movie")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "movie", fetch = FetchType.EAGER)
     public List<Picture> pictures = new ArrayList<>();
 
     public static Movie findByName(String query) {

@@ -16,11 +16,11 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Actor extends PanacheEntityBase {
     @Id
-    public long id; //using "Base" version of PanacheEntity because ids are custom
+    public long id;
     public String firstName;
     public String lastName;
     public Date bornDate;
-    @ManyToMany(mappedBy = "actors")
+    @ManyToMany(mappedBy = "actors", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("movies")
     public List<Movie> movies = new ArrayList<>();
 }

@@ -48,8 +48,6 @@ public class ActorResource {
         if (entity == null) {
             throw new NotFoundException();
         }
-
-        entity.id = actor.id;
         entity.firstName = actor.firstName;
         entity.lastName = actor.lastName;
         entity.bornDate = actor.bornDate;
