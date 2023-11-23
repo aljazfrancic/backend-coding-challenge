@@ -28,6 +28,7 @@ public class ActorResource {
     }
 
     @GET
+    @Transactional
     @Path("/page/{page}")
     public List<PanacheEntityBase> listPage(int page) {
         return Actor.streamAll().skip(page * pageSize).limit(pageSize).toList();
