@@ -32,6 +32,7 @@ public class PictureResource {
     @Transactional
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
+        //TODO: should allow only pictures, but allows any files
         Picture picture = new Picture();
         picture.movie = movie;
         picture.picture = file.readAllBytes();
