@@ -21,27 +21,34 @@ import org.jboss.resteasy.reactive.PartType;
 import org.jboss.resteasy.reactive.RestForm;
 import org.src.entities.Movie;
 import org.src.entities.Picture;
+import org.src.entities.RequestCounters;
 
+@Transactional
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/pictures")
 public class PictureResource {
     @GET
     public List<Picture> list() {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.pictureGet++;
         return Picture.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Picture get(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.pictureGetId++;
         return Picture.findById(id);
     } //TODO: also return actual file in separate GET request???
 
     @POST
-    @Transactional
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
         //TODO: should allow only pictures, but allows any files
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.picturePost++;
         Picture picture = new Picture();
         picture.movie = movie;
         picture.picture = file.readAllBytes();
@@ -52,8 +59,9 @@ public class PictureResource {
 
     @PUT
     @Path("/{id}")
-    @Transactional
     public Picture update(Long id, Picture picture) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.picturePut++;
         Picture entity = Picture.findById(id);
         if (entity == null) {
             throw new NotFoundException();
@@ -67,8 +75,9 @@ public class PictureResource {
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public void delete(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.pictureDelete++;
         Picture entity = Picture.findById(id);
         if (entity == null) {
             throw new NotFoundException();

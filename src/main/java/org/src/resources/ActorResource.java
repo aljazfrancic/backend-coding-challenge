@@ -13,10 +13,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.src.entities.Actor;
+import org.src.entities.RequestCounters;
 
 import java.net.URI;
 import java.util.List;
 
+@Transactional
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/actors")
@@ -25,33 +27,40 @@ public class ActorResource {
 
     @GET
     public List<Actor> list() {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorGet++;
         return Actor.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Actor get(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorGetId++;
         return Actor.findById(id);
     }
 
     @GET
-    @Transactional
     @Path("/page/{page}")
     public List<PanacheEntityBase> listPage(int page) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorGetPage++;
         return Actor.streamAll().skip(page * pageSize).limit(pageSize).toList();
     }
 
     @POST
-    @Transactional
     public Response create(Actor actor) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorPost++;
         actor.persist();
         return Response.created(URI.create("/actors/" + actor.id)).build();
     }
 
     @PUT
     @Path("/{id}")
-    @Transactional
     public Actor update(Long id, Actor actor) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorPut++;
         Actor entity = Actor.findById(id);
         if (entity == null) {
             throw new NotFoundException();
@@ -65,8 +74,9 @@ public class ActorResource {
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public void delete(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.actorDelete++;
         Actor entity = Actor.findById(id);
         if (entity == null) {
             throw new NotFoundException();

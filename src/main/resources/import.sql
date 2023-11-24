@@ -100,3 +100,10 @@ insert into Picture(movie_id, picture)
 values (68646, 1),
        (68646, 2),
        (68646, 3);
+
+-- one row entity, id is always 1
+insert into RequestCounters(id, actorGet, actorPost, actorGetPage, actorGetId, actorPut, actorDelete, movieActorGet,
+                            movieActorPost, movieActorGetId, movieActorPut, movieActorDelete, movieGet, moviePost,
+                            movieGetPage, movieSearch, movieGetId, moviePut, movieDelete, pictureGet, picturePost,
+                            pictureGetId, picturePut, pictureDelete)
+values (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);

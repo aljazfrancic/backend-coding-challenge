@@ -13,10 +13,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.src.entities.Movie;
+import org.src.entities.RequestCounters;
 
 import java.net.URI;
 import java.util.List;
 
+@Transactional
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/movies")
@@ -25,33 +27,40 @@ public class MovieResource {
 
     @GET
     public List<Movie> list() {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.movieGet++;
         return Movie.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Movie get(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.movieGetId++;
         return Movie.findById(id);
     }
 
     @GET
-    @Transactional
     @Path("/page/{page}")
     public List<PanacheEntityBase> listPage(int page) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.movieGetPage++;
         return Movie.streamAll().skip(page * pageSize).limit(pageSize).toList();
     }
 
     @POST
-    @Transactional
     public Response create(Movie movie) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.moviePost++;
         movie.persist();
         return Response.created(URI.create("/movies/" + movie.id)).build();
     }
 
     @PUT
     @Path("/{id}")
-    @Transactional
     public Movie update(Long id, Movie movie) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.moviePut++;
         Movie entity = Movie.findById(id);
         if (entity == null) {
             throw new NotFoundException();
@@ -66,8 +75,9 @@ public class MovieResource {
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public void delete(Long id) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.movieDelete++;
         Movie entity = Movie.findById(id);
         if (entity == null) {
             throw new NotFoundException();
@@ -78,6 +88,8 @@ public class MovieResource {
     @GET
     @Path("/search/{query}") //TODO TEST!
     public Movie search(String query) {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.movieSearch++;
         return Movie.findByName(query);
     }
 }
