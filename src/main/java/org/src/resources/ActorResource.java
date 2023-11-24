@@ -1,6 +1,5 @@
 package org.src.resources;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -42,10 +41,10 @@ public class ActorResource {
 
     @GET
     @Path("/page/{page}")
-    public List<PanacheEntityBase> listPage(int page) {
+    public List<Actor> listPage(int page) {
         RequestCounters requestCounters = RequestCounters.findById(1);
         requestCounters.actorGetPage++;
-        return Actor.streamAll().skip(page * pageSize).limit(pageSize).toList();
+        return Actor.streamAll().skip(page * pageSize).limit(pageSize).map(Actor.class::cast).toList();
     }
 
     @POST
