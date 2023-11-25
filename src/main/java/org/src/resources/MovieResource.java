@@ -85,7 +85,7 @@ public class MovieResource {
     }
 
     @GET
-    @Path("/search/{query}") //TODO TEST!
+    @Path("/search/{query}")
     public Movie search(String query) {
         RequestCounters requestCounters = RequestCounters.findById(1);
         requestCounters.movieSearch++;

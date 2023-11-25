@@ -2,7 +2,6 @@ package org.src.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,18 +24,15 @@ public class Movie extends PanacheEntityBase {
     @Column(columnDefinition = "TEXT") //because it's long
     public String description;
 
-    //TODO CASCADE...
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "MovieActor", joinColumns = {@JoinColumn(name = "movieId")}, inverseJoinColumns = {@JoinColumn(name = "actorId")})
     @JsonIdentityReference(alwaysAsId = true)
     public List<Actor> actors = new ArrayList<>();
-
-    //TODO CASCADE...
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "movie", fetch = FetchType.EAGER)
+    
+    @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER)
     public List<Picture> pictures = new ArrayList<>();
 
     public static Movie findByName(String query) {
         return find("title", query).firstResult();
-        // TODO PARTIAL NAME SEARCH + MULTIPLE RESULTS + SEARCH DESCRIPTIONS + HANDLE NO RESULT???
     }
 }
