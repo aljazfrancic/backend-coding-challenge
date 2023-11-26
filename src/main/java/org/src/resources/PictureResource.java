@@ -1,5 +1,6 @@
 package org.src.resources;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -32,27 +33,24 @@ import org.src.entities.RequestCounters;
 public class PictureResource {
     @GET
     public List<Picture> list() {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.pictureGet++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGet++;
         return Picture.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Picture get(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.pictureGetId++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGetId++;
         return Picture.findById(id);
     }
 
     @GET
     @Path("/direct/{id}")
     public Response getDirect(Long id) throws IOException {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.pictureGetDirectId++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGetDirectId++;
 
         //get bytes
-        byte[] imageBytes = ((Picture) Picture.findById(id)).picture;
+        byte[] imageBytes = ((Picture) Picture.findById(id, LockModeType.PESSIMISTIC_READ)).picture;
 
         //guess mime type
         ByteArrayInputStream stream = new ByteArrayInputStream(imageBytes);
@@ -66,8 +64,7 @@ public class PictureResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.picturePost++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().picturePost++;
         Picture picture = new Picture();
         picture.movie = movie;
         picture.picture = file.readAllBytes();
@@ -79,9 +76,8 @@ public class PictureResource {
     @PUT
     @Path("/{id}")
     public Picture update(Long id, Picture picture) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.picturePut++;
-        Picture entity = Picture.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().picturePut++;
+        Picture entity = Picture.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }
@@ -95,9 +91,8 @@ public class PictureResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.pictureDelete++;
-        Picture entity = Picture.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureDelete++;
+        Picture entity = Picture.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }

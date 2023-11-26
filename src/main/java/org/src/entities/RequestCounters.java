@@ -3,11 +3,17 @@ package org.src.entities;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.LockModeType;
 
 @Entity
 public class RequestCounters extends PanacheEntityBase {
     @Id
     public Long id;
+
+    public static RequestCounters getPessimicticWriteLockedRequestCounters() {
+        return RequestCounters.findById(1, LockModeType.PESSIMISTIC_WRITE);
+    }
+
     //Actor
     public Integer actorGet;
     public Integer actorPost;

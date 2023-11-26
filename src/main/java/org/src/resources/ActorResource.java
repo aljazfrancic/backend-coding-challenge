@@ -1,5 +1,6 @@
 package org.src.resources;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -26,31 +27,27 @@ public class ActorResource {
 
     @GET
     public List<Actor> list() {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorGet++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGet++;
         return Actor.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Actor get(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorGetId++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGetId++;
         return Actor.findById(id);
     }
 
     @GET
     @Path("/page/{page}")
     public List<Actor> listPage(int page) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorGetPage++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGetPage++;
         return Actor.streamAll().skip(page * pageSize).limit(pageSize).map(Actor.class::cast).toList();
     }
 
     @POST
     public Response create(Actor actor) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorPost++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorPost++;
         actor.persist();
         return Response.created(URI.create("/actors/" + actor.id)).build();
     }
@@ -58,9 +55,8 @@ public class ActorResource {
     @PUT
     @Path("/{id}")
     public Actor update(Long id, Actor actor) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorPut++;
-        Actor entity = Actor.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorPut++;
+        Actor entity = Actor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }
@@ -74,9 +70,8 @@ public class ActorResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.actorDelete++;
-        Actor entity = Actor.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().actorDelete++;
+        Actor entity = Actor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }

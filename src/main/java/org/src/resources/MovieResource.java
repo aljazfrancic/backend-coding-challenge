@@ -1,5 +1,6 @@
 package org.src.resources;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -26,31 +27,27 @@ public class MovieResource {
 
     @GET
     public List<Movie> list() {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieGet++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGet++;
         return Movie.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Movie get(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieGetId++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGetId++;
         return Movie.findById(id);
     }
 
     @GET
     @Path("/page/{page}")
     public List<Movie> listPage(int page) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieGetPage++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGetPage++;
         return Movie.streamAll().skip(page * pageSize).limit(pageSize).map(Movie.class::cast).toList();
     }
 
     @POST
     public Response create(Movie movie) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.moviePost++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().moviePost++;
         movie.persist();
         return Response.created(URI.create("/movies/" + movie.id)).build();
     }
@@ -58,9 +55,8 @@ public class MovieResource {
     @PUT
     @Path("/{id}")
     public Movie update(Long id, Movie movie) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.moviePut++;
-        Movie entity = Movie.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().moviePut++;
+        Movie entity = Movie.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }
@@ -75,9 +71,8 @@ public class MovieResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieDelete++;
-        Movie entity = Movie.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieDelete++;
+        Movie entity = Movie.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }
@@ -87,8 +82,7 @@ public class MovieResource {
     @GET
     @Path("/search/{query}")
     public List<Movie> search(String query) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieSearch++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieSearch++;
         return Movie.search(query);
     }
 }

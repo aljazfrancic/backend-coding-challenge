@@ -1,5 +1,6 @@
 package org.src.resources;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -24,23 +25,20 @@ import java.util.List;
 public class MovieActorResource {
     @GET
     public List<MovieActor> list() {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieActorGet++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorGet++;
         return MovieActor.listAll();
     }
 
     @GET
     @Path("/{id}")
     public MovieActor get(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieActorGetId++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorGetId++;
         return MovieActor.findById(id);
     }
 
     @POST
     public Response create(MovieActor movieActor) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieActorPost++;
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorPost++;
         movieActor.persist();
         return Response.created(URI.create("/movie_actors/" + movieActor.id)).build();
     }
@@ -48,9 +46,8 @@ public class MovieActorResource {
     @PUT
     @Path("/{id}")
     public MovieActor update(Long id, MovieActor movieActor) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieActorPut++;
-        MovieActor entity = MovieActor.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorPut++;
+        MovieActor entity = MovieActor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }
@@ -64,9 +61,8 @@ public class MovieActorResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters requestCounters = RequestCounters.findById(1);
-        requestCounters.movieActorDelete++;
-        MovieActor entity = MovieActor.findById(id);
+        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorDelete++;
+        MovieActor entity = MovieActor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
         }

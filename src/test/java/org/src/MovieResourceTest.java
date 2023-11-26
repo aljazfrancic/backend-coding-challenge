@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -153,5 +156,49 @@ public class MovieResourceTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("size()", is(20));
+    }
+
+    private static class MyRunnable implements Runnable {
+        int myId;
+
+        public MyRunnable(int id) {
+            myId = id;
+        }
+
+        public void run() {
+            JsonObject requestParams = Json.createObjectBuilder()
+                    .add("id", myId)
+                    .add("title", "Movie")
+                    .add("year", "2020")
+                    .add("description", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dignissim enim sit amet venenatis urna cursus eget. Vivamus at augue eget arcu dictum.")
+                    .build();
+            given()
+                    .header("Content-Type", "application/json")
+                    .body(requestParams.toString())
+                    .post("/movies")
+                    .then().
+                    statusCode(201);
+            given()
+                    .pathParam("id", myId)
+                    .delete("/movies/{id}")
+                    .then()
+                    .statusCode(204);
+        }
+    }
+
+    @Test
+    @Order(8)
+    public void testMovieConcurrent() throws InterruptedException {
+        int numOfThreads = 500;
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < numOfThreads; i++) {
+            threads.add(new Thread(new MyRunnable(i)));
+        }
+        for (int i = 0; i < numOfThreads; i++) {
+            threads.get(i).start();
+        }
+        for (int i = 0; i < numOfThreads; i++) {
+            threads.get(i).join();
+        }
     }
 }
