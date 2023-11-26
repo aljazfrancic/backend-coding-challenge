@@ -12,9 +12,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLConnection;
 import java.util.List;
 
 import org.jboss.resteasy.reactive.PartType;
@@ -41,12 +43,29 @@ public class PictureResource {
         RequestCounters requestCounters = RequestCounters.findById(1);
         requestCounters.pictureGetId++;
         return Picture.findById(id);
-    } //TODO: also return actual file in separate GET request???
+    }
 
+    @GET
+    @Path("/direct/{id}")
+    public Response getDirect(Long id) throws IOException {
+        RequestCounters requestCounters = RequestCounters.findById(1);
+        requestCounters.pictureGetDirectId++;
+
+        //get bytes
+        byte[] imageBytes = ((Picture) Picture.findById(id)).picture;
+
+        //guess mime type
+        ByteArrayInputStream stream = new ByteArrayInputStream(imageBytes);
+        String mime = URLConnection.guessContentTypeFromStream(stream);
+
+        //send image bytes and correct mime type
+        return Response.ok(imageBytes).type(mime).build();
+    }
+
+    //TODO: should be limited to "image/bmp", "image/png", "image/jpeg" and "image/gif" MIME types, but accepts any file
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
-        //TODO: should allow only pictures, but allows any files
         RequestCounters requestCounters = RequestCounters.findById(1);
         requestCounters.picturePost++;
         Picture picture = new Picture();

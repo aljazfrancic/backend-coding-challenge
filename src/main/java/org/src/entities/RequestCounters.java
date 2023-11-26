@@ -33,6 +33,7 @@ public class RequestCounters extends PanacheEntityBase {
     public Integer pictureGet;
     public Integer picturePost;
     public Integer pictureGetId;
+    public Integer pictureGetDirectId;
     public Integer picturePut;
     public Integer pictureDelete;
 }

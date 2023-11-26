@@ -105,5 +105,5 @@ values (68646, 1),
 insert into RequestCounters(id, actorGet, actorPost, actorGetPage, actorGetId, actorPut, actorDelete, movieActorGet,
                             movieActorPost, movieActorGetId, movieActorPut, movieActorDelete, movieGet, moviePost,
                             movieGetPage, movieSearch, movieGetId, moviePut, movieDelete, pictureGet, picturePost,
-                            pictureGetId, picturePut, pictureDelete)
-values (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                            pictureGetId, pictureGetDirectId, picturePut, pictureDelete)
+values (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
