@@ -32,7 +32,7 @@ public class MovieResourceTest {
     public void testMoviePost() {
         JsonObject requestParams = Json.createObjectBuilder()
                 .add("id", "0")
-                .add("title", "Famous Movie")
+                .add("title", "Funny Movie")
                 .add("year", "2020")
                 .add("description", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dignissim enim sit amet venenatis urna cursus eget. Vivamus at augue eget arcu dictum.")
                 .build();
@@ -77,7 +77,22 @@ public class MovieResourceTest {
     @Test
     @Order(6)
     public void testMoviePut() {
-        //TODO
+        JsonObject requestParams = Json.createObjectBuilder()
+                .add("title", "Scary Movie")
+                .add("year", "2012")
+                .add("description", "BOO!")
+                .build();
+        given()
+                .pathParam("id", 0)
+                .header("Content-Type", "application/json")
+                .body(requestParams.toString())
+                .put("/movies/{id}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("title", equalTo("Scary Movie"))
+                .body("year", equalTo(2012))
+                .body("description", equalTo("BOO!"));
     }
 
     @Test
