@@ -59,7 +59,34 @@ public class MovieResourceTest {
     @Test
     @Order(4)
     public void testMovieSearch() {
-        // TODO PARTIAL NAME SEARCH + MULTIPLE RESULTS + SEARCH DESCRIPTIONS + HANDLE NO RESULT???
+        given()
+                .pathParam("query", "matrix")
+                .get("/movies/search/{query}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()", is(1));
+        given()
+                .pathParam("query", "ata")
+                .get("/movies/search/{query}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()", is(1));
+        given()
+                .pathParam("query", "2003")
+                .get("/movies/search/{query}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()", is(1));
+        given()
+                .pathParam("query", "the")
+                .get("/movies/search/{query}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()", is(19)); //"the" is quite common in both descriptions and titles
     }
 
     @Test

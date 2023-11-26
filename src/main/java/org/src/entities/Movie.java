@@ -28,11 +28,13 @@ public class Movie extends PanacheEntityBase {
     @JoinTable(name = "MovieActor", joinColumns = {@JoinColumn(name = "movieId")}, inverseJoinColumns = {@JoinColumn(name = "actorId")})
     @JsonIdentityReference(alwaysAsId = true)
     public List<Actor> actors = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER)
     public List<Picture> pictures = new ArrayList<>();
 
-    public static Movie findByName(String query) {
-        return find("title", query).firstResult();
+    public static List<Movie> search(String query) {
+        //search if either title, description or year contain query
+        //is case-insensitive
+        return list("title like ?1 or description like ?1 or year like ?1", "%" + query + "%");
     }
 }
