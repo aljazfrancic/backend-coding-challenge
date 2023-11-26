@@ -25,20 +25,20 @@ import java.util.List;
 public class MovieActorResource {
     @GET
     public List<MovieActor> list() {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorGet++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieActorGet++;
         return MovieActor.listAll();
     }
 
     @GET
     @Path("/{id}")
     public MovieActor get(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorGetId++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieActorGetId++;
         return MovieActor.findById(id);
     }
 
     @POST
     public Response create(MovieActor movieActor) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorPost++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieActorPost++;
         movieActor.persist();
         return Response.created(URI.create("/movie_actors/" + movieActor.id)).build();
     }
@@ -46,7 +46,7 @@ public class MovieActorResource {
     @PUT
     @Path("/{id}")
     public MovieActor update(Long id, MovieActor movieActor) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorPut++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieActorPut++;
         MovieActor entity = MovieActor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
@@ -61,7 +61,7 @@ public class MovieActorResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieActorDelete++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieActorDelete++;
         MovieActor entity = MovieActor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();

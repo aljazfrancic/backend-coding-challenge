@@ -33,21 +33,21 @@ import org.src.entities.RequestCounters;
 public class PictureResource {
     @GET
     public List<Picture> list() {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGet++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().pictureGet++;
         return Picture.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Picture get(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGetId++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().pictureGetId++;
         return Picture.findById(id);
     }
 
     @GET
     @Path("/direct/{id}")
     public Response getDirect(Long id) throws IOException {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureGetDirectId++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().pictureGetDirectId++;
 
         //get bytes
         byte[] imageBytes = ((Picture) Picture.findById(id, LockModeType.PESSIMISTIC_READ)).picture;
@@ -64,7 +64,7 @@ public class PictureResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response create(@RestForm InputStream file, @RestForm @PartType(MediaType.APPLICATION_JSON) Movie movie) throws IOException {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().picturePost++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().picturePost++;
         Picture picture = new Picture();
         picture.movie = movie;
         picture.picture = file.readAllBytes();
@@ -76,7 +76,7 @@ public class PictureResource {
     @PUT
     @Path("/{id}")
     public Picture update(Long id, Picture picture) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().picturePut++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().picturePut++;
         Picture entity = Picture.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
@@ -91,7 +91,7 @@ public class PictureResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().pictureDelete++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().pictureDelete++;
         Picture entity = Picture.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();

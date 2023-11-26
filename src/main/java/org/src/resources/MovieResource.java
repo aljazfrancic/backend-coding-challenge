@@ -27,27 +27,27 @@ public class MovieResource {
 
     @GET
     public List<Movie> list() {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGet++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieGet++;
         return Movie.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Movie get(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGetId++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieGetId++;
         return Movie.findById(id);
     }
 
     @GET
     @Path("/page/{page}")
     public List<Movie> listPage(int page) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieGetPage++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieGetPage++;
         return Movie.streamAll().skip(page * pageSize).limit(pageSize).map(Movie.class::cast).toList();
     }
 
     @POST
     public Response create(Movie movie) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().moviePost++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().moviePost++;
         movie.persist();
         return Response.created(URI.create("/movies/" + movie.id)).build();
     }
@@ -55,7 +55,7 @@ public class MovieResource {
     @PUT
     @Path("/{id}")
     public Movie update(Long id, Movie movie) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().moviePut++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().moviePut++;
         Movie entity = Movie.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
@@ -71,7 +71,7 @@ public class MovieResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieDelete++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieDelete++;
         Movie entity = Movie.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
@@ -82,7 +82,7 @@ public class MovieResource {
     @GET
     @Path("/search/{query}")
     public List<Movie> search(String query) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().movieSearch++;
-        return Movie.search(query);
+        RequestCounters.getPessimisticWriteLockedRequestCounters().movieSearch++;
+        return Movie.find("title like ?1 or description like ?1 or year like ?1", "%" + query + "%").withLock(LockModeType.PESSIMISTIC_READ).stream().map(Movie.class::cast).toList();
     }
 }

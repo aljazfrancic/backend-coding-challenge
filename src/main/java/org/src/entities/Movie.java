@@ -1,6 +1,9 @@
 package org.src.entities;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.quarkus.arc.Lock;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,10 +34,4 @@ public class Movie extends PanacheEntityBase {
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER)
     public List<Picture> pictures = new ArrayList<>();
-
-    public static List<Movie> search(String query) {
-        //search if either title, description or year contain query
-        //is case-insensitive
-        return list("title like ?1 or description like ?1 or year like ?1", "%" + query + "%");
-    }
 }

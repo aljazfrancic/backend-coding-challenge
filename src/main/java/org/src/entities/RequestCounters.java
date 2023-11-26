@@ -10,8 +10,12 @@ public class RequestCounters extends PanacheEntityBase {
     @Id
     public Long id;
 
-    public static RequestCounters getPessimicticWriteLockedRequestCounters() {
+    public static RequestCounters getPessimisticWriteLockedRequestCounters() {
         return RequestCounters.findById(1, LockModeType.PESSIMISTIC_WRITE);
+    }
+
+    public static RequestCounters getPessimisticReadLockedRequestCounters() {
+        return RequestCounters.findById(1, LockModeType.PESSIMISTIC_READ);
     }
 
     //Actor

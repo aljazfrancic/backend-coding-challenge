@@ -27,27 +27,27 @@ public class ActorResource {
 
     @GET
     public List<Actor> list() {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGet++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorGet++;
         return Actor.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Actor get(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGetId++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorGetId++;
         return Actor.findById(id);
     }
 
     @GET
     @Path("/page/{page}")
     public List<Actor> listPage(int page) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorGetPage++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorGetPage++;
         return Actor.streamAll().skip(page * pageSize).limit(pageSize).map(Actor.class::cast).toList();
     }
 
     @POST
     public Response create(Actor actor) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorPost++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorPost++;
         actor.persist();
         return Response.created(URI.create("/actors/" + actor.id)).build();
     }
@@ -55,7 +55,7 @@ public class ActorResource {
     @PUT
     @Path("/{id}")
     public Actor update(Long id, Actor actor) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorPut++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorPut++;
         Actor entity = Actor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
@@ -70,7 +70,7 @@ public class ActorResource {
     @DELETE
     @Path("/{id}")
     public void delete(Long id) {
-        RequestCounters.getPessimicticWriteLockedRequestCounters().actorDelete++;
+        RequestCounters.getPessimisticWriteLockedRequestCounters().actorDelete++;
         Actor entity = Actor.findById(id, LockModeType.PESSIMISTIC_WRITE);
         if (entity == null) {
             throw new NotFoundException();
