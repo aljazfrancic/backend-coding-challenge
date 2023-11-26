@@ -12,7 +12,7 @@ To use the provided docker-compose.yml file, first run:
 ./mvnw clean package
 ```
 
-WARNING: The above command will throw some errors he first time your run it, because the database is empty and there is
+WARNING: The above command will throw some errors the first time your run it, because the database is empty and there is
 noting to drop, and we have `quarkus.hibernate-orm.database.generation=drop-and-create` in application.properties.
 
 When you don't need the dev and test database anymore, use:
